@@ -15,6 +15,15 @@ class ApplicationState extends State<Application> {
       note; // Note variable which will be updated with th-> data returned by the plugin
   bool
       isRecording; // Is recording variable which will be updated with th-> data returned by the plugin
+  double target;
+  double distance;
+  int octave;
+  String nearestNote;
+  double nearestDistance;
+  int nearestOctave;
+  double tolerance;
+  bool isOnPitch;
+  double nearestTarget;
 
   FlutterFft flutterFft = new FlutterFft();
 
@@ -26,6 +35,12 @@ class ApplicationState extends State<Application> {
     note = flutterFft.getNote;
     super.initState();
     _initialize();
+  }
+
+  @override
+  void dispose() {
+    flutterFft.stopRecorder();
+    super.dispose();
   }
 
   @override
@@ -56,7 +71,7 @@ class ApplicationState extends State<Application> {
               // If the plugin is recording, return the current frequency, otherwise, return "Not recording..."
               isRecording
                   ? Text(
-                      "Current frequency: ${frequency.toStringAsFixed(2)}",
+                      "Current frequency: ${frequency?.toStringAsFixed(2)}",
                       style: TextStyle(
                         fontSize: 35,
                       ),
@@ -67,6 +82,76 @@ class ApplicationState extends State<Application> {
                         fontSize: 35,
                       ),
                     ),
+              if (isRecording)
+                Text(
+                  "tolerance: $tolerance",
+                  style: TextStyle(
+                    fontSize: 35,
+                  ),
+                ),
+              if (isRecording)
+                Text(
+                  "target: ${target?.toStringAsFixed(2)}",
+                  style: TextStyle(
+                    fontSize: 35,
+                  ),
+                ),
+              if (isRecording)
+                Text(
+                  "distance: ${distance?.toStringAsFixed(2)}",
+                  style: TextStyle(
+                    fontSize: 35,
+                  ),
+                ),
+              if (isRecording)
+                Text(
+                  "octave: $octave",
+                  style: TextStyle(
+                    fontSize: 35,
+                  ),
+                ),
+              if (isRecording)
+                Text(
+                  "Target: ${target?.toStringAsFixed(2)}",
+                  style: TextStyle(
+                    fontSize: 35,
+                  ),
+                ),
+              if (isRecording)
+                Text(
+                  "nearestNote: $nearestNote",
+                  style: TextStyle(
+                    fontSize: 35,
+                  ),
+                ),
+              if (isRecording)
+                Text(
+                  "nearestTarget: ${nearestTarget?.toStringAsFixed(2)}",
+                  style: TextStyle(
+                    fontSize: 35,
+                  ),
+                ),
+              if (isRecording)
+                Text(
+                  "nearestDistance: $nearestDistance",
+                  style: TextStyle(
+                    fontSize: 35,
+                  ),
+                ),
+              if (isRecording)
+                Text(
+                  "nearestOctave: $nearestOctave",
+                  style: TextStyle(
+                    fontSize: 35,
+                  ),
+                ),
+              if (isRecording)
+                Text(
+                  "isOnPitch: $isOnPitch",
+                  style: TextStyle(
+                    fontSize: 35,
+                  ),
+                ),
             ],
           ),
         ),
@@ -90,8 +175,17 @@ class ApplicationState extends State<Application> {
         setState(
           () => {
             // Data indexes at the end of file.
+            tolerance = data[0],
             frequency = data[1],
             note = data[2],
+            target = data[3],
+            distance = data[4],
+            octave = data[5],
+            nearestNote = data[6],
+            nearestTarget = data[7],
+            nearestDistance = data[8],
+            nearestOctave = data[9],
+            isOnPitch = data[10]
           },
         ),
         flutterFft.setNote = note,
